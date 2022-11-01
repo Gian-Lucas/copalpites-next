@@ -25,7 +25,7 @@ export function BottomNavigation() {
         }}
       >
         <BottomNavigationAction
-          value="/"
+          value=""
           label="Conta"
           icon={<AccountCircleIcon />}
         />

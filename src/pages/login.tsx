@@ -1,33 +1,15 @@
-import { Button, Avatar, Container, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
-import LogoutIcon from "@mui/icons-material/Logout";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Login() {
   const { data: session } = useSession();
+  const router = useRouter();
 
   if (session) {
-    return (
-      <>
-        {session.user?.image && session.user?.name && (
-          <Avatar
-            sx={{ bgcolor: "lightskyblue" }}
-            alt={session.user.name}
-            src={session.user.image}
-          />
-        )}
-        Signed in as {session.user?.email} <br />
-        <Button
-          variant="contained"
-          sx={{ fontWeight: "bold" }}
-          startIcon={<LogoutIcon />}
-          onClick={() => signOut()}
-        >
-          DESLOGAR
-        </Button>
-      </>
-    );
+    router.push("/");
   }
   return (
     <Container
