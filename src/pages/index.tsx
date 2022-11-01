@@ -1,20 +1,5 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-
-import { BottomNavigation } from "../components/BottomNavigation";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import { Typography } from "@mui/material";
 
 export default function Home() {
-  return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-
-      <BottomNavigation />
-    </ThemeProvider>
-  );
+  return <Typography>Home</Typography>;
 }

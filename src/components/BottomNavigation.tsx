@@ -5,9 +5,11 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Paper } from "@mui/material";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export function BottomNavigation() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("account");
+  const router = useRouter();
 
   return (
     <Paper
@@ -19,11 +21,24 @@ export function BottomNavigation() {
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
+          router.push(`/${newValue}`);
         }}
       >
-        <BottomNavigationAction label="Conta" icon={<AccountCircleIcon />} />
-        <BottomNavigationAction label="Palpites" icon={<SportsSoccerIcon />} />
-        <BottomNavigationAction label="Ranking" icon={<TrendingUpIcon />} />
+        <BottomNavigationAction
+          value="account"
+          label="Conta"
+          icon={<AccountCircleIcon />}
+        />
+        <BottomNavigationAction
+          value="guess"
+          label="Palpites"
+          icon={<SportsSoccerIcon />}
+        />
+        <BottomNavigationAction
+          value="ranking"
+          label="Ranking"
+          icon={<TrendingUpIcon />}
+        />
       </BottomNav>
     </Paper>
   );
