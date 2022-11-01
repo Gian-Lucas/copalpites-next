@@ -4,6 +4,8 @@ export default function Document() {
   return (
     <Html lang="pt-br">
       <Head>
+        <title>Copa</title>
+
         <meta name="viewport" content="initial-scale=1, width=device-width" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />

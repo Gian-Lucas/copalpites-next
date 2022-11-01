@@ -8,8 +8,8 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 export function BottomNavigation() {
-  const [value, setValue] = useState("account");
   const router = useRouter();
+  const [value, setValue] = useState(router.asPath);
 
   return (
     <Paper
@@ -25,7 +25,7 @@ export function BottomNavigation() {
         }}
       >
         <BottomNavigationAction
-          value="account"
+          value="/"
           label="Conta"
           icon={<AccountCircleIcon />}
         />
