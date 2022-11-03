@@ -13,10 +13,10 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       try {
-        const { data } = await api.get(`/users/${user.email}`);
+        const { data } = await api.get(`/user/${user.email}`);
 
         if (!data.user) {
-          await api.post("/users", {
+          await api.post("/user", {
             email: user.email,
           });
         }
