@@ -10,19 +10,19 @@ export default function Home() {
 
   if (status === "loading") {
     return <Loader />;
-  }
-
-  if (status === "unauthenticated") {
+  } else if (status === "unauthenticated") {
     router.push("/login");
+  } else {
+    return (
+      <Button
+        variant="contained"
+        sx={{ fontWeight: "bold", p: 1.5 }}
+        startIcon={<ExitToAppIcon />}
+        onClick={() => signOut()}
+      >
+        Logout
+      </Button>
+    );
   }
-  return (
-    <Button
-      variant="contained"
-      sx={{ fontWeight: "bold", p: 1.5 }}
-      startIcon={<ExitToAppIcon />}
-      onClick={() => signOut()}
-    >
-      Logout
-    </Button>
-  );
+  return <Loader />;
 }

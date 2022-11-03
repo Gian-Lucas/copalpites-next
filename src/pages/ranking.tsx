@@ -9,10 +9,10 @@ export default function Ranking() {
 
   if (status === "loading") {
     return <Loader />;
-  }
-
-  if (status === "unauthenticated") {
+  } else if (status === "unauthenticated") {
     router.push("/login");
+  } else {
+    return <Typography>Ranking</Typography>;
   }
-  return <Typography>Ranking</Typography>;
+  return <Loader />;
 }

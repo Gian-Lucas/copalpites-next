@@ -9,11 +9,10 @@ export default function Guess() {
 
   if (status === "loading") {
     return <Loader />;
-  }
-
-  if (status === "unauthenticated") {
+  } else if (status === "unauthenticated") {
     router.push("/login");
+  } else {
+    return <Typography>Palpites</Typography>;
   }
-
-  return <Typography>Palpites</Typography>;
+  return <Loader />;
 }
