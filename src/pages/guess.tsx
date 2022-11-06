@@ -1,4 +1,11 @@
-import { Container, Typography } from "@mui/material";
+import {
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -35,6 +42,7 @@ interface Guess {
 export default function Guess() {
   const { data: session, status } = useSession();
   const [dataLoading, setDataLoading] = useState(true);
+  const [matchType, setMatchType] = useState<string>("r1");
   const [matches, setMatches] = useState<Match[]>([]);
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const router = useRouter();
@@ -42,11 +50,11 @@ export default function Guess() {
   useEffect(() => {
     if (!session?.user?.email) return;
     getData();
-  }, [session]);
+  }, [session, matchType]);
 
   async function getData() {
     try {
-      const resMatches = await api.get("/matches");
+      const resMatches = await api.get(`/matches/${matchType}`);
       const resGuesses = await api.get(`/guesses/${session?.user?.email}`);
 
       setMatches(resMatches.data.matches);
@@ -81,8 +89,28 @@ export default function Guess() {
         }}
       >
         <Typography mt={3} variant="h5">
-          Faça seus palpites
+          {matches.length === 0 && !dataLoading
+            ? "Ainda não há jogos"
+            : "Faça seus palpites"}
         </Typography>
+
+        <FormControl>
+          <InputLabel id="select-label">Jogos</InputLabel>
+          <Select
+            labelId="select-label"
+            value={matchType}
+            label="Jogos"
+            onChange={(e) => setMatchType(e.target.value)}
+          >
+            <MenuItem value={"r1"}>Rodada 1</MenuItem>
+            <MenuItem value={"r2"}>Rodada 2</MenuItem>
+            <MenuItem value={"r3"}>Rodada 3</MenuItem>
+            <MenuItem value={"r16"}>Oitavas de final</MenuItem>
+            <MenuItem value={"qf"}>Quartas de final</MenuItem>
+            <MenuItem value={"sf"}>Semi finais</MenuItem>
+            <MenuItem value={"f"}>Final</MenuItem>
+          </Select>
+        </FormControl>
 
         {dataLoading && <Loader />}
 
