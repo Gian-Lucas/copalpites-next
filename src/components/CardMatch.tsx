@@ -1,10 +1,4 @@
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Typography, TextField, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import { useState } from "react";
@@ -27,17 +21,45 @@ interface CardMatchProps {
     matchFinished: boolean;
     type: "r1" | "r2" | "r3" | "r16" | "qf" | "sf" | "f";
   };
-  guesses: {
-    matchId: string;
-    userEmail: string;
-    homeScore: number;
-    awayScore: number;
-  }[];
+  guesses: Guess[];
   userEmail: string | null | undefined;
 }
 
+interface Guess {
+  // _id: string;
+  matchId: string;
+  userEmail: string;
+  homeScore: number;
+  awayScore: number;
+}
+
 export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
-  const guessSaved = guesses.find((guess) => guess.matchId === match._id);
+  const [guessesCard, setGuessesCard] = useState<Guess[]>(guesses);
+  const guessSaved = guessesCard.find((guess) => guess.matchId === match._id);
+  let buttonMessage = "Palpite Salvo";
+
+  if (match.matchFinished && guessSaved) {
+    if (
+      match.homeScore === guessSaved.homeScore &&
+      match.awayScore === guessSaved.awayScore
+    ) {
+      buttonMessage = "+5 Acertou o placar";
+    } else if (
+      (match.homeScore > match.awayScore &&
+        guessSaved.homeScore > guessSaved.awayScore) ||
+      (match.homeScore < match.awayScore &&
+        guessSaved.homeScore < guessSaved.awayScore)
+    ) {
+      buttonMessage = "+2 Acertou o vencedor";
+    } else if (
+      match.homeScore === match.awayScore &&
+      guessSaved.homeScore === guessSaved.awayScore
+    ) {
+      buttonMessage = "+2 Acertou o empate";
+    } else {
+      buttonMessage = "+0 Errou tudo";
+    }
+  }
 
   const [homeScore, setHomeScore] = useState("0");
   const [awayScore, setAwayScore] = useState("0");
@@ -56,6 +78,8 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
     await api.post("/guess", {
       ...guess,
     });
+
+    setGuessesCard([...guesses, guess]);
   }
 
   return (
@@ -128,8 +152,8 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
       </Box>
 
       {guessSaved ? (
-        <Button fullWidth variant="outlined" endIcon={<CheckIcon />}>
-          Palpite Salvo
+        <Button fullWidth sx={{ fontWeight: "bold" }} variant="outlined">
+          {buttonMessage}
         </Button>
       ) : (
         <Button
