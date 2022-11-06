@@ -49,21 +49,65 @@ export default function Guess() {
 
   useEffect(() => {
     if (!session?.user?.email) return;
+
+    (async () => {
+      const res = await api.get("/matches");
+      const resGuesses = await api.get(`/guesses/${session?.user?.email}`);
+
+      const guessesLoaded: Guess[] = resGuesses.data.guesses;
+
+      setGuesses(guessesLoaded);
+
+      if (guessesLoaded.length !== 0) {
+        const matchesFinished = res.data.matches.filter(
+          (match: Match) => match.matchFinished === true
+        );
+
+        const score = guessesLoaded.reduce((total, currentGuess) => {
+          const match = matchesFinished.find(
+            (match: Match) => match._id === currentGuess.matchId
+          );
+
+          if (match) {
+            if (
+              match.homeScore === currentGuess.homeScore &&
+              match.awayScore === currentGuess.awayScore
+            ) {
+              return total + 5;
+            } else if (
+              (match.homeScore > match.awayScore &&
+                currentGuess.homeScore > currentGuess.awayScore) ||
+              (match.homeScore < match.awayScore &&
+                currentGuess.homeScore < currentGuess.awayScore)
+            ) {
+              return total + 2;
+            } else if (
+              match.homeScore === match.awayScore &&
+              currentGuess.homeScore === currentGuess.awayScore
+            ) {
+              return total + 2;
+            }
+          }
+          return total;
+        }, 0);
+        await api.put(`user/${session?.user?.email}`, { score });
+      }
+    })();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session?.user?.email) return;
     getData();
   }, [session, matchType]);
 
   async function getData() {
     try {
+      setDataLoading(true);
       const resMatches = await api.get(`/matches/${matchType}`);
-      const resGuesses = await api.get(`/guesses/${session?.user?.email}`);
 
       setMatches(resMatches.data.matches);
-      setGuesses(resGuesses.data.guesses);
 
       setDataLoading(false);
-
-      console.log(resMatches.data.matches);
-      console.log(resGuesses.data.guesses);
     } catch (error) {
       setDataLoading(false);
       console.log(error);
