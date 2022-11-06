@@ -1,6 +1,7 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
+import AlarmOffIcon from "@mui/icons-material/AlarmOff";
 import { useState } from "react";
 import { api } from "../lib/axios";
 
@@ -116,6 +117,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         sx={{ gap: 1.5 }}
       >
         <TextField
+          disabled={match.matchFinished && !guessSaved}
           inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.homeScore) : homeScore}
           onChange={(e) => setHomeScore(e.target.value)}
@@ -140,6 +142,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
           alt={match.awayTeam.name}
         />
         <TextField
+          disabled={match.matchFinished && !guessSaved}
           inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.awayScore) : awayScore}
           onChange={(e) => setAwayScore(e.target.value)}
@@ -157,13 +160,20 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         </Button>
       ) : (
         <Button
+          disabled={match.matchFinished && !guessSaved}
           onClick={handleSaveGuess}
           fullWidth
           variant="contained"
           sx={{ fontWeight: "bold" }}
-          endIcon={<CheckIcon />}
+          endIcon={
+            match.matchFinished && !guessSaved ? (
+              <AlarmOffIcon />
+            ) : (
+              <CheckIcon />
+            )
+          }
         >
-          Confirmar
+          {match.matchFinished && !guessSaved ? "Tempo esgotado" : "Confirmar"}
         </Button>
       )}
     </Box>
