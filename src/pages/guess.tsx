@@ -108,6 +108,7 @@ export default function Guess() {
             <MenuItem value={"r16"}>Oitavas de final</MenuItem>
             <MenuItem value={"qf"}>Quartas de final</MenuItem>
             <MenuItem value={"sf"}>Semi finais</MenuItem>
+            <MenuItem value={"tf"}>Terceiro lugar</MenuItem>
             <MenuItem value={"f"}>Final</MenuItem>
           </Select>
         </FormControl>
