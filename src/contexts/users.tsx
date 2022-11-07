@@ -3,12 +3,14 @@ import { api } from "../lib/axios";
 
 interface User {
   email: string;
+  name: string;
+  image: string;
   score: number;
 }
 
 interface UserContextData {
   users: User[];
-  updateUser: (user: User) => void;
+  updateUser: (email: string, score: number) => void;
 }
 
 export const UserContext = createContext({} as UserContextData);
@@ -32,9 +34,16 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     })();
   }, []);
 
-  function updateUser(userToUpdate: User) {
+  function updateUser(email: string, score: number) {
+    if (email === "") return;
+
     const usersUpdated = users.map((user) => {
-      if (user.email === userToUpdate.email) return userToUpdate;
+      if (user.email === email)
+        return {
+          ...user,
+          email,
+          score,
+        };
 
       return user;
     });

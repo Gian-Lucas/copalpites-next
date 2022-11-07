@@ -99,7 +99,7 @@ export default function Guess() {
           return total;
         }, 0);
         await api.put(`user/${session?.user?.email}`, { score });
-        updateUser({ email: session?.user?.email || "", score });
+        updateUser(session?.user?.email || "", score);
       }
     })();
   }, [session]);

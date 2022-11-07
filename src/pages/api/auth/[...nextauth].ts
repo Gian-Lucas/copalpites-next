@@ -1,6 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { SignInOptions } from "next-auth/react";
 import { api } from "../../../lib/axios";
 
 export const authOptions: NextAuthOptions = {
@@ -18,6 +17,8 @@ export const authOptions: NextAuthOptions = {
         if (!data.user) {
           await api.post("/user", {
             email: user.email,
+            name: user.name,
+            image: user.image,
           });
         }
 
