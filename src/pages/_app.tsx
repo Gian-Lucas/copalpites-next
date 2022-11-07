@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 
 import { BottomNavigation } from "../components/BottomNavigation";
 import Head from "next/head";
+import { GuessesContextProvider } from "../contexts/guesses";
 
 const darkTheme = createTheme({
   palette: {
@@ -25,7 +26,9 @@ export default function App({
           <title>COPAlpites</title>
         </Head>
 
-        <Component {...pageProps} />
+        <GuessesContextProvider>
+          <Component {...pageProps} />
+        </GuessesContextProvider>
 
         <BottomNavigation />
       </SessionProvider>

@@ -4,8 +4,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
 import AlarmOffIcon from "@mui/icons-material/AlarmOff";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { api } from "../lib/axios";
+import { GuessesContext } from "../contexts/guesses";
 
 interface CardMatchProps {
   match: {
@@ -24,20 +25,11 @@ interface CardMatchProps {
     matchFinished: boolean;
     type: "r1" | "r2" | "r3" | "r16" | "qf" | "sf" | "f";
   };
-  guesses: Guess[];
   userEmail: string | null | undefined;
 }
 
-interface Guess {
-  // _id: string;
-  matchId: string;
-  userEmail: string;
-  homeScore: number;
-  awayScore: number;
-}
-
-export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
-  const [guessSavedInDB, setGuessSavedInDB] = useState(false);
+export function CardMatch({ match, userEmail }: CardMatchProps) {
+  const { guesses, updateGuesses } = useContext(GuessesContext);
   const [loading, setLoading] = useState(false);
 
   const guessSaved = guesses.find((guess) => guess.matchId === match._id);
@@ -86,7 +78,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
     });
 
     setLoading(false);
-    setGuessSavedInDB(true);
+    updateGuesses([...guesses, guess]);
   }
 
   return (
@@ -124,7 +116,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
       >
         <TextField
           disabled={match.matchFinished && !guessSaved}
-          inputProps={{ readOnly: !!guessSaved || guessSavedInDB }}
+          inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.homeScore) : homeScore}
           onChange={(e) => setHomeScore(e.target.value)}
           id="outlined-basic"
@@ -149,7 +141,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         />
         <TextField
           disabled={match.matchFinished && !guessSaved}
-          inputProps={{ readOnly: !!guessSaved || guessSavedInDB }}
+          inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.awayScore) : awayScore}
           onChange={(e) => setAwayScore(e.target.value)}
           autoComplete="off"
@@ -170,7 +162,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         >
           Salvando palpite
         </LoadingButton>
-      ) : guessSaved || guessSavedInDB ? (
+      ) : guessSaved ? (
         <Button fullWidth sx={{ fontWeight: "bold" }} variant="outlined">
           {buttonMessage}
         </Button>

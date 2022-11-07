@@ -9,9 +9,10 @@ import {
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CardMatch } from "../components/CardMatch";
 import { Loader } from "../components/Loader";
+import { GuessesContext } from "../contexts/guesses";
 import { api } from "../lib/axios";
 
 interface Match {
@@ -40,11 +41,11 @@ interface Guess {
 }
 
 export default function Guess() {
+  const { updateGuesses } = useContext(GuessesContext);
   const { data: session, status } = useSession();
   const [dataLoading, setDataLoading] = useState(true);
   const [matchType, setMatchType] = useState<string>("r1");
   const [matches, setMatches] = useState<Match[]>([]);
-  const [guesses, setGuesses] = useState<Guess[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function Guess() {
 
       const guessesLoaded: Guess[] = resGuesses.data.guesses;
 
-      setGuesses(guessesLoaded);
+      updateGuesses(guessesLoaded);
 
       if (guessesLoaded.length !== 0) {
         const matchesFinished = res.data.matches.filter(
@@ -165,7 +166,6 @@ export default function Guess() {
           return (
             <CardMatch
               key={match._id}
-              guesses={guesses}
               match={match}
               userEmail={session?.user?.email}
             />
