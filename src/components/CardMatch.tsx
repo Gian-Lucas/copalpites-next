@@ -1,6 +1,8 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
+import SaveIcon from "@mui/icons-material/Save";
 import AlarmOffIcon from "@mui/icons-material/AlarmOff";
 import { useState } from "react";
 import { api } from "../lib/axios";
@@ -36,6 +38,7 @@ interface Guess {
 
 export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
   const [guessSavedInDB, setGuessSavedInDB] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const guessSaved = guesses.find((guess) => guess.matchId === match._id);
   let buttonMessage = "Palpite Salvo";
@@ -67,6 +70,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
   const [awayScore, setAwayScore] = useState("0");
 
   async function handleSaveGuess() {
+    setLoading(true);
     if (!userEmail || isNaN(Number(homeScore)) || isNaN(Number(awayScore)))
       return;
 
@@ -81,6 +85,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
       ...guess,
     });
 
+    setLoading(false);
     setGuessSavedInDB(true);
   }
 
@@ -155,7 +160,17 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         />
       </Box>
 
-      {guessSaved || guessSavedInDB ? (
+      {loading ? (
+        <LoadingButton
+          fullWidth
+          loading
+          loadingPosition="start"
+          startIcon={<SaveIcon />}
+          variant="outlined"
+        >
+          Salvando palpite
+        </LoadingButton>
+      ) : guessSaved || guessSavedInDB ? (
         <Button fullWidth sx={{ fontWeight: "bold" }} variant="outlined">
           {buttonMessage}
         </Button>
