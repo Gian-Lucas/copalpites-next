@@ -63,6 +63,8 @@ export default function Guess() {
           (match: Match) => match.matchFinished === true
         );
 
+        if (matchesFinished.length === 0) return;
+
         const score = guessesLoaded.reduce((total, currentGuess) => {
           const match = matchesFinished.find(
             (match: Match) => match._id === currentGuess.matchId

@@ -35,8 +35,9 @@ interface Guess {
 }
 
 export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
-  const [guessesCard, setGuessesCard] = useState<Guess[]>(guesses);
-  const guessSaved = guessesCard.find((guess) => guess.matchId === match._id);
+  const [guessSavedInDB, setGuessSavedInDB] = useState(false);
+
+  const guessSaved = guesses.find((guess) => guess.matchId === match._id);
   let buttonMessage = "Palpite Salvo";
 
   if (match.matchFinished && guessSaved) {
@@ -80,7 +81,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
       ...guess,
     });
 
-    setGuessesCard([...guesses, guess]);
+    setGuessSavedInDB(true);
   }
 
   return (
@@ -118,7 +119,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
       >
         <TextField
           disabled={match.matchFinished && !guessSaved}
-          inputProps={{ readOnly: !!guessSaved }}
+          inputProps={{ readOnly: !!guessSaved || guessSavedInDB }}
           value={guessSaved ? String(guessSaved.homeScore) : homeScore}
           onChange={(e) => setHomeScore(e.target.value)}
           id="outlined-basic"
@@ -143,7 +144,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         />
         <TextField
           disabled={match.matchFinished && !guessSaved}
-          inputProps={{ readOnly: !!guessSaved }}
+          inputProps={{ readOnly: !!guessSaved || guessSavedInDB }}
           value={guessSaved ? String(guessSaved.awayScore) : awayScore}
           onChange={(e) => setAwayScore(e.target.value)}
           autoComplete="off"
@@ -154,7 +155,7 @@ export function CardMatch({ match, guesses, userEmail }: CardMatchProps) {
         />
       </Box>
 
-      {guessSaved ? (
+      {guessSaved || guessSavedInDB ? (
         <Button fullWidth sx={{ fontWeight: "bold" }} variant="outlined">
           {buttonMessage}
         </Button>
