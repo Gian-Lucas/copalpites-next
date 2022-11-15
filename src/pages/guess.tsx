@@ -98,6 +98,7 @@ export default function Guess() {
           }
           return total;
         }, 0);
+
         await api.put(`user/${session?.user?.email}`, { score });
         updateUser(session?.user?.email || "", score);
       }
@@ -106,10 +107,10 @@ export default function Guess() {
 
   useEffect(() => {
     if (!session?.user?.email) return;
-    getData();
+    getMatches();
   }, [session, matchType]);
 
-  async function getData() {
+  async function getMatches() {
     try {
       setDataLoading(true);
       const resMatches = await api.get(`/matches/${matchType}`);
@@ -124,11 +125,11 @@ export default function Guess() {
     }
   }
 
-  if (status === "loading") {
-    return <Loader />;
-  } else if (status === "unauthenticated") {
-    router.push("/login");
-  } else {
+  if (status === "loading") return <Loader />;
+
+  if (status === "unauthenticated") router.push("/login");
+
+  if (status === "authenticated") {
     return (
       <Container
         sx={{
@@ -180,5 +181,6 @@ export default function Guess() {
       </Container>
     );
   }
+
   return <Loader />;
 }

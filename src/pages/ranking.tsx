@@ -17,11 +17,11 @@ export default function Ranking() {
 
   const router = useRouter();
 
-  if (status === "loading") {
-    return <Loader />;
-  } else if (status === "unauthenticated") {
-    router.push("/login");
-  } else {
+  if (status === "loading") return <Loader />;
+
+  if (status === "unauthenticated") router.push("/login");
+
+  if (status === "authenticated") {
     return (
       <Container
         sx={{
@@ -38,11 +38,14 @@ export default function Ranking() {
           Ranking
         </Typography>
 
+        {users.length === 0 && <Loader />}
+
         {usersSortedByScore.map((user, index) => {
           return <UserCard key={user.email} index={index} {...user} />;
         })}
       </Container>
     );
   }
+
   return <Loader />;
 }
