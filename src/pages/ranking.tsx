@@ -41,7 +41,14 @@ export default function Ranking() {
         {users.length === 0 && <Loader />}
 
         {usersSortedByScore.map((user, index) => {
-          return <UserCard key={user.email} index={index} {...user} />;
+          return (
+            <UserCard
+              key={user.email}
+              sessionEmail={session.user?.email}
+              index={index}
+              {...user}
+            />
+          );
         })}
       </Container>
     );

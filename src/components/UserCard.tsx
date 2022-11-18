@@ -2,12 +2,25 @@ import { Avatar, Box, Chip, Typography } from "@mui/material";
 
 interface UserCardProps {
   index: number;
+  sessionEmail: string | undefined | null;
   score: number;
   name: string;
   image: string;
+  email: string;
 }
 
-export function UserCard({ index, score, name, image }: UserCardProps) {
+export function UserCard({
+  index,
+  sessionEmail,
+  score,
+  name,
+  image,
+  email,
+}: UserCardProps) {
+  const nameArray = name.split(" ");
+  const firstAndLastName =
+    nameArray.length === 1 ? nameArray[0] : `${nameArray[0]} ${nameArray[1]}`;
+
   return (
     <Box
       width="100%"
@@ -29,7 +42,14 @@ export function UserCard({ index, score, name, image }: UserCardProps) {
       >
         <Avatar alt={name} src={image} />
         <Box display="flex" flexDirection="column" alignItems="flex-start">
-          <Typography fontWeight="bold">{name}</Typography>
+          <Typography fontWeight="bold">
+            {firstAndLastName}
+            {email === sessionEmail && (
+              <Typography variant="caption" color="darkgray" ml={0.5}>
+                (você)
+              </Typography>
+            )}
+          </Typography>
 
           <Typography variant="caption" color="darkgray">
             {score} ponto(s)
