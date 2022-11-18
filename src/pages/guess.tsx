@@ -13,7 +13,6 @@ import { useContext, useEffect, useState } from "react";
 import { CardMatch } from "../components/CardMatch";
 import { Loader } from "../components/Loader";
 import { GuessesContext } from "../contexts/guesses";
-import { UserContext } from "../contexts/users";
 import { api } from "../lib/axios";
 
 interface Match {
@@ -43,7 +42,6 @@ interface Guess {
 
 export default function Guess() {
   const { updateGuesses } = useContext(GuessesContext);
-  const { updateUser } = useContext(UserContext);
 
   const { data: session, status } = useSession();
 
@@ -63,45 +61,6 @@ export default function Guess() {
       const guessesLoaded: Guess[] = resGuesses.data.guesses;
 
       updateGuesses(guessesLoaded);
-
-      if (guessesLoaded.length !== 0) {
-        const matchesFinished = res.data.matches.filter(
-          (match: Match) => match.matchFinished === true
-        );
-
-        if (matchesFinished.length === 0) return;
-
-        const score = guessesLoaded.reduce((total, currentGuess) => {
-          const match = matchesFinished.find(
-            (match: Match) => match._id === currentGuess.matchId
-          );
-
-          if (match) {
-            if (
-              match.homeScore === currentGuess.homeScore &&
-              match.awayScore === currentGuess.awayScore
-            ) {
-              return total + 5;
-            } else if (
-              (match.homeScore > match.awayScore &&
-                currentGuess.homeScore > currentGuess.awayScore) ||
-              (match.homeScore < match.awayScore &&
-                currentGuess.homeScore < currentGuess.awayScore)
-            ) {
-              return total + 2;
-            } else if (
-              match.homeScore === match.awayScore &&
-              currentGuess.homeScore === currentGuess.awayScore
-            ) {
-              return total + 2;
-            }
-          }
-          return total;
-        }, 0);
-
-        await api.put(`user/${session?.user?.email}`, { score });
-        updateUser(session?.user?.email || "", score);
-      }
     })();
   }, [session]);
 

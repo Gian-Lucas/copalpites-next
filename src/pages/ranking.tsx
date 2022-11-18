@@ -1,17 +1,28 @@
 import { Container, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "../components/Loader";
 import { UserCard } from "../components/UserCard";
-import { UserContext } from "../contexts/users";
+import { api } from "../lib/axios";
+
+interface User {
+  name: string;
+  email: string;
+  image: string;
+  score: number;
+}
 
 export default function Ranking() {
-  const { users } = useContext(UserContext);
+  const [users, setUsers] = useState<User[]>([]);
 
-  const usersSortedByScore = users.sort(
-    (userA, userB) => userB.score - userA.score
-  );
+  useEffect(() => {
+    (async () => {
+      const res = await api.get("/users");
+
+      setUsers(res.data.users);
+    })();
+  }, []);
 
   const { data: session, status } = useSession();
 
@@ -40,7 +51,7 @@ export default function Ranking() {
 
         {users.length === 0 && <Loader />}
 
-        {usersSortedByScore.map((user, index) => {
+        {users.map((user, index) => {
           return (
             <UserCard
               key={user.email}
