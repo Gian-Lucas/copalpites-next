@@ -7,6 +7,7 @@ import AlarmOffIcon from "@mui/icons-material/AlarmOff";
 import { useState, useContext } from "react";
 import { api } from "../lib/axios";
 import { GuessesContext } from "../contexts/guesses";
+import { isAfter } from "date-fns";
 
 interface CardMatchProps {
   match: {
@@ -80,6 +81,26 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
     setLoading(false);
     updateGuesses([...guesses, guess]);
   }
+
+  const matchDateSplit = match.gameDate.split(" ");
+  const month = matchDateSplit[2] === "novembro" ? 10 : 11;
+  const hour = Number(matchDateSplit[6].split("h")[0]);
+
+  const newMatchDate = {
+    year: 2022,
+    month,
+    day: Number(matchDateSplit[0]),
+    hour,
+  };
+
+  const matchDate = new Date(
+    newMatchDate.year,
+    newMatchDate.month,
+    newMatchDate.day,
+    newMatchDate.hour
+  );
+
+  console.log(isAfter(Date.now(), matchDate));
 
   return (
     <Box
