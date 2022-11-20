@@ -100,7 +100,7 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
     newMatchDate.hour
   );
 
-  console.log(isAfter(Date.now(), matchDate));
+  const matchDateIsAfter = isAfter(Date.now(), matchDate);
 
   return (
     <Box
@@ -136,7 +136,10 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
         sx={{ gap: 1.5 }}
       >
         <TextField
-          disabled={match.matchFinished && !guessSaved}
+          disabled={
+            (match.matchFinished && !guessSaved) ||
+            (matchDateIsAfter && !guessSaved)
+          }
           inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.homeScore) : homeScore}
           onChange={(e) => setHomeScore(e.target.value)}
@@ -161,7 +164,10 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
           alt={match.awayTeam.name}
         />
         <TextField
-          disabled={match.matchFinished && !guessSaved}
+          disabled={
+            (match.matchFinished && !guessSaved) ||
+            (matchDateIsAfter && !guessSaved)
+          }
           inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.awayScore) : awayScore}
           onChange={(e) => setAwayScore(e.target.value)}
@@ -189,20 +195,22 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
         </Button>
       ) : (
         <Button
-          disabled={match.matchFinished && !guessSaved}
+          disabled={(match.matchFinished && !guessSaved) || matchDateIsAfter}
           onClick={handleSaveGuess}
           fullWidth
           variant="contained"
           sx={{ fontWeight: "bold" }}
           endIcon={
-            match.matchFinished && !guessSaved ? (
+            (match.matchFinished && !guessSaved) || matchDateIsAfter ? (
               <AlarmOffIcon />
             ) : (
               <CheckIcon />
             )
           }
         >
-          {match.matchFinished && !guessSaved ? "Tempo esgotado" : "Confirmar"}
+          {(match.matchFinished && !guessSaved) || matchDateIsAfter
+            ? "Tempo esgotado"
+            : "Confirmar"}
         </Button>
       )}
     </Box>
