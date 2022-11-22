@@ -55,7 +55,7 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
     ) {
       buttonMessage = "+2 Acertou o empate";
     } else {
-      buttonMessage = "+0 Errou tudo";
+      buttonMessage = "+0 Errou";
     }
   }
 
@@ -101,6 +101,15 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
   );
 
   const matchDateIsAfter = isAfter(Date.now(), matchDate);
+  const messageButtonColors = {
+    "Palpite Salvo": "gray",
+    "+0 Errou": "#FF2E2E",
+    "+5 Acertou o placar": "springgreen",
+    "+2 Acertou o vencedor": "skyblue",
+    "+2 Acertou o empate": "skyblue",
+  };
+
+  const color = messageButtonColors[buttonMessage];
 
   return (
     <Box
@@ -190,7 +199,11 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
           Salvando palpite
         </LoadingButton>
       ) : guessSaved ? (
-        <Button fullWidth sx={{ fontWeight: "bold" }} variant="outlined">
+        <Button
+          fullWidth
+          sx={{ fontWeight: "bold", color, borderColor: color }}
+          variant="outlined"
+        >
           {buttonMessage}
         </Button>
       ) : (
