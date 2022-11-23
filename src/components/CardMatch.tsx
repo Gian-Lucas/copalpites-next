@@ -35,6 +35,7 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
 
   const guessSaved = guesses.find((guess) => guess.matchId === match._id);
   let buttonMessage = "Palpite Salvo";
+  let color = "gray";
 
   if (match.matchFinished && guessSaved) {
     if (
@@ -42,6 +43,7 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
       match.awayScore === guessSaved.awayScore
     ) {
       buttonMessage = "+5 Acertou o placar";
+      color = "springgreen";
     } else if (
       (match.homeScore > match.awayScore &&
         guessSaved.homeScore > guessSaved.awayScore) ||
@@ -49,13 +51,16 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
         guessSaved.homeScore < guessSaved.awayScore)
     ) {
       buttonMessage = "+2 Acertou o vencedor";
+      color = "skyblue";
     } else if (
       match.homeScore === match.awayScore &&
       guessSaved.homeScore === guessSaved.awayScore
     ) {
       buttonMessage = "+2 Acertou o empate";
+      color = "skyblue";
     } else {
       buttonMessage = "+0 Errou";
+      color = "#FF2E2E";
     }
   }
 
@@ -101,15 +106,6 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
   );
 
   const matchDateIsAfter = isAfter(Date.now(), matchDate);
-  const messageButtonColors = {
-    "Palpite Salvo": "gray",
-    "+0 Errou": "#FF2E2E",
-    "+5 Acertou o placar": "springgreen",
-    "+2 Acertou o vencedor": "skyblue",
-    "+2 Acertou o empate": "skyblue",
-  };
-
-  const color = messageButtonColors[buttonMessage];
 
   return (
     <Box
