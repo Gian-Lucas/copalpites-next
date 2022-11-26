@@ -148,7 +148,6 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
           inputProps={{ readOnly: !!guessSaved }}
           value={guessSaved ? String(guessSaved.homeScore) : homeScore}
           onChange={(e) => setHomeScore(e.target.value)}
-          id="outlined-basic"
           label="Gols"
           size="small"
           variant="outlined"
@@ -177,7 +176,6 @@ export function CardMatch({ match, userEmail }: CardMatchProps) {
           value={guessSaved ? String(guessSaved.awayScore) : awayScore}
           onChange={(e) => setAwayScore(e.target.value)}
           autoComplete="off"
-          id="outlined-basic"
           label="Gols"
           size="small"
           variant="outlined"
