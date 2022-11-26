@@ -47,10 +47,16 @@ export default function Guess() {
 
   const [dataLoading, setDataLoading] = useState(true);
   const [matchType, setMatchType] = useState<string>(() => {
-    const matchTypeStored = localStorage.getItem("@copalpites:matchType-1.0.0");
+    if (typeof window !== "undefined") {
+      const matchTypeStored = localStorage.getItem(
+        "@copalpites:matchType-1.0.0"
+      );
 
-    if (matchTypeStored) {
-      return matchTypeStored;
+      if (matchTypeStored) {
+        return matchTypeStored;
+      }
+
+      return "r1";
     }
 
     return "r1";
