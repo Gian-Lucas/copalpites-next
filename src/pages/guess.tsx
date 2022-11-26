@@ -46,7 +46,15 @@ export default function Guess() {
   const { data: session, status } = useSession();
 
   const [dataLoading, setDataLoading] = useState(true);
-  const [matchType, setMatchType] = useState<string>("r1");
+  const [matchType, setMatchType] = useState<string>(() => {
+    const matchTypeStored = localStorage.getItem("@copalpites:matchType-1.0.0");
+
+    if (matchTypeStored) {
+      return matchTypeStored;
+    }
+
+    return "r1";
+  });
   const [matches, setMatches] = useState<Match[]>([]);
 
   const router = useRouter();
@@ -67,6 +75,9 @@ export default function Guess() {
   useEffect(() => {
     if (!session?.user?.email) return;
     getMatches();
+
+    // const matchTypeToStore = JSON.stringify(matchType)
+    localStorage.setItem("@copalpites:matchType-1.0.0", matchType);
   }, [session, matchType]);
 
   async function getMatches() {
